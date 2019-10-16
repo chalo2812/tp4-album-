@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,8 +58,18 @@ public class InterfazGrafica implements ActionListener, WindowListener {
 
         dtm = new DefaultTableModel();
         jt = new JTable(dtm);
-        JScrollPane jsp = new JScrollPane(jt);
+        String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DURACION", "DESCRIPCION"};
 
+
+
+/*
+        JTable table = new JTable(data, columnNames);
+        INSERT INTO TEMA VALUES ('Tratar de estar mejor',4,,1);
+       */
+        dtm.addRow(encabezado);
+        JScrollPane jsp = new JScrollPane(jt);
+        /*JScrollPane scrollPane = new JScrollPane(table);
+        table.setFillsViewportHeight(true);*/
 
         jpTema = new JPanel();
         jpTema.setLayout(new FlowLayout(FlowLayout.CENTER));
