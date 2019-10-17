@@ -2,6 +2,7 @@ import com.mysql.jdbc.*;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,14 +16,6 @@ public class Conexion {
 
 
     public Conexion() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection(url, user, pass);
-            stmt = (Statement) conn.createStatement();
-            stmt = (Statement) conn.createStatement();
-       } catch (Exception ex) {
-            System.out.println("Error " + ex.getMessage());
-        }
     }
 
     public List obtenerAlbum() {
@@ -52,13 +45,13 @@ public class Conexion {
         return null;
     }
 
-    public List obtenerTema() {
+    public ResultSet obtenerTema() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = (Connection) DriverManager.getConnection(url, user, pass);
             stmt = (Statement) conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM TEMA");
-            return Arrays.asList(result);
+            return result;
         } catch (Exception ex) {
             System.out.println("Error " + ex.getMessage());
         }

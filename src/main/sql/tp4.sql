@@ -68,6 +68,7 @@ CREATE TABLE `tema` (
   `DESCRIPCION` varchar(30) NOT NULL,
   `DURACION` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `tema` (`NRO_TEMA`, `NRO_ALBUM`, `DESCRIPCION`, `DURACION`) VALUES ('1', '1', 'PEDRO', '4');
 
 --
 -- Índices para tablas volcadas
