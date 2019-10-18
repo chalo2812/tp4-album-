@@ -36,20 +36,22 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpBotones.add(jb3);
 
         jl1 = new JLabel("Album");
-        jl1.setVisible(false);
+        jl1.setVisible(true);
+
         jcb = new JComboBox();
-        jcb.add(alimentarCombo());
-        jcb.setEditable(false);
-        jcb.setVisible(false);
+        jcb.addItem("algo");//TODO: alimentar con BD
+        jcb.setEditable(true);
+        jcb.setVisible(true);
+
         jpAlbum = new JPanel();
         jpAlbum.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpAlbum.add(jl1);
         jpAlbum.add(jcb);
 
         jl2 = new JLabel("Artitsta");
-        jl2.setVisible(false);
+        jl2.setVisible(true);
         jtf = new JTextField();
-        jtf.setVisible(false);
+        jtf.setVisible(true);
         jpArtista = new JPanel();
         jpArtista.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -59,22 +61,14 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         dtm = new DefaultTableModel();
         jt = new JTable(dtm);
         String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DURACION", "DESCRIPCION"};
+        //dtm.addRow(encabezado);
 
-
-
-/*
-        JTable table = new JTable(data, columnNames);
-        INSERT INTO TEMA VALUES ('Tratar de estar mejor',4,,1);
-       */
-        dtm.addRow(encabezado);
         JScrollPane jsp = new JScrollPane(jt);
-        /*JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);*/
 
         jpTema = new JPanel();
         jpTema.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpTema.add(jsp);
-
+        jpTema.setVisible(false);
         frame.add(jpBotones);
         frame.add(jpAlbum);
         frame.add(jpArtista);
