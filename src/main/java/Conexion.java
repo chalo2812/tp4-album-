@@ -2,7 +2,6 @@ import com.mysql.jdbc.*;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

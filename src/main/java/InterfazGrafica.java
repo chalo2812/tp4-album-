@@ -30,6 +30,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jb3 = new JButton("Baja");
         jb3.setEnabled(false);
         jb4 = new JButton("Aceptar");
+        jb4.setVisible(false);
         jb4.setEnabled(false);
         jpBotones.add(jb1);
         jpBotones.add(jb2);
@@ -47,16 +48,18 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpAlbum.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpAlbum.add(jl1);
         jpAlbum.add(jcb);
+        jpAlbum.setVisible(false);
 
         jl2 = new JLabel("Artitsta");
         jl2.setVisible(true);
         jtf = new JTextField();
-        jtf.setVisible(true);
+        jtf.setVisible(false);
         jpArtista = new JPanel();
         jpArtista.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         jpArtista.add(jl2);
         jpArtista.add(jtf);
+        jpArtista.setVisible(false);
 
         dtm = new DefaultTableModel();
         jt = new JTable(dtm);
