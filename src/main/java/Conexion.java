@@ -2,8 +2,6 @@ import com.mysql.jdbc.*;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
 
 public class Conexion {
 
@@ -12,13 +10,13 @@ public class Conexion {
     private String url = "jdbc:mysql://localhost:3306/tp4";
     private String user = "tp4";
     private String pass = "tp4tp4";
-    ResultSet listaAlbum, listaArtista, listaTemas;
+    private ResultSet listaAlbum, listaArtista, listaTemas;
 
     public Conexion() {
         super();
-        listaAlbum = obtenerAlbum();
-        listaArtista = obtenerArtista();
-        listaTemas = obtenerTema();
+        this.listaAlbum = obtenerAlbum();
+        this.listaArtista = obtenerArtista();
+        this.listaTemas = obtenerTema();
     }
 
     public ResultSet obtenerAlbum() {

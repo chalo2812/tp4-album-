@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class InterfazGrafica implements ActionListener, WindowListener {
 
@@ -13,6 +15,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
     private JTable jt;
     private DefaultTableModel dtm;
     private JPanel jpBotones, jpAlbum,jpArtista, jpTema;
+    private Conexion con = new Conexion();
 
     public InterfazGrafica() {
 
@@ -36,7 +39,14 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jl1.setVisible(true);
 
         jcb = new JComboBox();
-        jcb.addItem("algo");//TODO: alimentar con BD
+        try {
+            ResultSet lista = con.obtenerAlbum();
+            while (lista.next()){
+                jcb.addItem(lista.getString("NOMBRE_ALBUM"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         jcb.setEditable(true);
         jcb.setVisible(true);
 
@@ -62,11 +72,20 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DURACION", "DESCRIPCION"};
         dtm.setColumnIdentifiers(encabezado);
 
-        JScrollPane jsp = new JScrollPane(jt);
+        try {
+            ResultSet lista = con.obtenerTema();
+            int i = 0;
+
+            while (lista.next()) {
+                dtm.insertRow(i, new Object[]{lista.getObject(i)});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         jpTema = new JPanel();
         jpTema.setLayout(new FlowLayout(FlowLayout.CENTER));
-        jpTema.add(jsp);
+        jpTema.add(new JScrollPane(jt));
         jpTema.setVisible(false);
         frame.add(jpBotones);
         frame.add(jpAlbum);
@@ -75,7 +94,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         frame.add(jb4);
 
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
-        frame.setSize(600,600);
+        frame.setSize(500,600);
         frame.setLocation(50,50);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
