@@ -1,22 +1,18 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
+import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
 public class InterfazGrafica implements ActionListener, WindowListener {
 
-    JFrame frame;
-    JButton jb1, jb2, jb3, jb4;
-    JComboBox jcb;
-    JLabel jl1,jl2;
-    JTextField jtf;
-    JTable jt;
-    DefaultTableModel dtm;
-    JPanel jpBotones, jpAlbum,jpArtista, jpTema;
+    private JFrame frame;
+    private JButton jb1, jb2, jb3, jb4;
+    private JComboBox jcb;
+    private JLabel jl1,jl2;
+    private JTextField jtf;
+    private JTable jt;
+    private DefaultTableModel dtm;
+    private JPanel jpBotones, jpAlbum,jpArtista, jpTema;
 
     public InterfazGrafica() {
 
@@ -50,7 +46,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpAlbum.add(jcb);
         jpAlbum.setVisible(false);
 
-        jl2 = new JLabel("Artitsta");
+        jl2 = new JLabel("Artista");
         jl2.setVisible(true);
         jtf = new JTextField();
         jtf.setVisible(false);
@@ -64,7 +60,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         dtm = new DefaultTableModel();
         jt = new JTable(dtm);
         String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DURACION", "DESCRIPCION"};
-        //dtm.addRow(encabezado);
+        dtm.setColumnIdentifiers(encabezado);
 
         JScrollPane jsp = new JScrollPane(jt);
 
@@ -83,11 +79,6 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         frame.setLocation(50,50);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-    }
-
-    private List alimentarCombo() {
-        List theList = new List();
-        return theList;
     }
 
     @Override

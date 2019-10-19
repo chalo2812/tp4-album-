@@ -12,18 +12,21 @@ public class Conexion {
     private String url = "jdbc:mysql://localhost:3306/tp4";
     private String user = "tp4";
     private String pass = "tp4tp4";
-
+    ResultSet listaAlbum, listaArtista, listaTemas;
 
     public Conexion() {
+        super();
+        listaAlbum = obtenerAlbum();
+        listaArtista = obtenerArtista();
+        listaTemas = obtenerTema();
     }
 
-    public List obtenerAlbum() {
+    public ResultSet obtenerAlbum() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = (Connection) DriverManager.getConnection(url, user, pass);
             stmt = (Statement) conn.createStatement();
-            ResultSet resultAlbum = stmt.executeQuery("SELECT * FROM ALBUM");
-            return Arrays.asList(resultAlbum);
+            return stmt.executeQuery("SELECT * FROM ALBUM");
         } catch (Exception ex) {
             System.out.println("Error " + ex.getMessage());
         }
@@ -31,13 +34,12 @@ public class Conexion {
     }
 
 
-    public List obtenerArtista() {
+    public ResultSet obtenerArtista() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = (Connection) DriverManager.getConnection(url, user, pass);
             stmt = (Statement) conn.createStatement();
-            ResultSet resultArtista = stmt.executeQuery("SELECT * FROM ALBUM");
-            return Arrays.asList(resultArtista);
+            return stmt.executeQuery("SELECT * FROM ARTISTA");
         } catch (Exception ex) {
             System.out.println("Error " + ex.getMessage());
         }
@@ -49,8 +51,7 @@ public class Conexion {
             Class.forName("com.mysql.jdbc.Driver");
             conn = (Connection) DriverManager.getConnection(url, user, pass);
             stmt = (Statement) conn.createStatement();
-            ResultSet result = stmt.executeQuery("SELECT * FROM TEMA");
-            return result;
+            return stmt.executeQuery("SELECT * FROM TEMA");
         } catch (Exception ex) {
             System.out.println("Error " + ex.getMessage());
         }
