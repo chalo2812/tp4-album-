@@ -2,6 +2,8 @@ import com.mysql.jdbc.*;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Connection;
 
 public class Conexion {
 
@@ -13,46 +15,46 @@ public class Conexion {
     private ResultSet listaAlbum, listaArtista, listaTemas;
 
     public Conexion() {
-        super();
-        this.listaAlbum = obtenerAlbum();
-        this.listaArtista = obtenerArtista();
-        this.listaTemas = obtenerTema();
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(url, user, pass);
+        } catch (Exception ex) {
+            System.out.println("Error Conexion, Excepcion " + ex.getMessage());
+        }
     }
 
     public ResultSet obtenerAlbum() {
+        listaAlbum = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection(url, user, pass);
             stmt = (Statement) conn.createStatement();
-            return stmt.executeQuery("SELECT * FROM ALBUM");
-        } catch (Exception ex) {
-            System.out.println("Error " + ex.getMessage());
+            listaAlbum = stmt.executeQuery("SELECT * FROM ALBUM");
+        } catch (SQLException ex) {
+            System.out.println("Error obtenerAlbum: Excepcion " + ex.getMessage());
         }
-        return null;
+        return listaAlbum;
     }
 
 
     public ResultSet obtenerArtista() {
+        listaArtista = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection(url, user, pass);
             stmt = (Statement) conn.createStatement();
             return stmt.executeQuery("SELECT * FROM ARTISTA");
         } catch (Exception ex) {
-            System.out.println("Error " + ex.getMessage());
+            System.out.println("Error obtenerArtista: Excepcion " + ex.getMessage());
         }
-        return null;
+        return listaArtista;
     }
 
     public ResultSet obtenerTema() {
+        listaTemas = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection(url, user, pass);
             stmt = (Statement) conn.createStatement();
-            return stmt.executeQuery("SELECT * FROM TEMA");
+            listaTemas = stmt.executeQuery("SELECT * FROM TEMA");
         } catch (Exception ex) {
-            System.out.println("Error " + ex.getMessage());
+            System.out.println("Error  obtenerTema: Excepcion " + ex.getMessage());
         }
-        return null;
+        return listaTemas;
     }
+
 }

@@ -18,10 +18,8 @@ public class InterfazGrafica implements ActionListener, WindowListener {
     private Conexion con = new Conexion();
 
     public InterfazGrafica() {
-
         frame = new JFrame("Tp de TP4");
         jpBotones = new JPanel();
-
         jb1 = new JButton("Consulta");
         jb1.addActionListener((ActionListener) this);
         jb2 = new JButton("Modificación");
@@ -34,18 +32,15 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpBotones.add(jb1);
         jpBotones.add(jb2);
         jpBotones.add(jb3);
-
         jl1 = new JLabel("Album");
         jl1.setVisible(true);
-
         jcb = new JComboBox();
         try {
             ResultSet lista = con.obtenerAlbum();
-            while (lista.next()){
-                jcb.addItem(lista.getString("NOMBRE_ALBUM"));
-            }
+            while (lista.next())
+                jcb.addItem(" " + lista.getInt("NRO_ALBUM") + " - "+ lista.getString("NOMBRE_ALBUM"));
         } catch (SQLException e) {
-            e.printStackTrace();
+
         }
         jcb.setEditable(true);
         jcb.setVisible(true);
@@ -58,8 +53,9 @@ public class InterfazGrafica implements ActionListener, WindowListener {
 
         jl2 = new JLabel("Artista");
         jl2.setVisible(true);
-        jtf = new JTextField();
-        jtf.setVisible(false);
+        jtf = new JTextField(30);
+        jtf.setVisible(true);
+        jtf.setEditable(true);
         jpArtista = new JPanel();
         jpArtista.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -71,18 +67,16 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jt = new JTable(dtm);
         String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DURACION", "DESCRIPCION"};
         dtm.setColumnIdentifiers(encabezado);
-
         try {
             ResultSet lista = con.obtenerTema();
             int i = 0;
-
-            while (lista.next()) {
-                dtm.insertRow(i, new Object[]{lista.getObject(i)});
+            while (lista.next()){
+                dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                i++;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Error  cargarTema: Excepcion " + ex.getMessage());
         }
-
         jpTema = new JPanel();
         jpTema.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpTema.add(new JScrollPane(jt));
@@ -92,10 +86,10 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         frame.add(jpArtista);
         frame.add(jpTema);
         frame.add(jb4);
-
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setSize(500,600);
         frame.setLocation(50,50);
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
@@ -105,11 +99,15 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         if (ae.getSource().equals(jb1)){
             jpAlbum.setVisible(true);
             jpArtista.setVisible(true);
+            jtf.setVisible(true);
             jpTema.setVisible(true);
             jb4.setEnabled(true);
         } else if (ae.getSource().equals(jcb)) {
             jt.setVisible(true);
+        //} else if (ae.getSource().equals()){
+
         }
+
     }
 
     @Override
@@ -146,4 +144,5 @@ public class InterfazGrafica implements ActionListener, WindowListener {
     public void windowDeactivated(WindowEvent windowEvent) {
 
     }
+
 }
