@@ -9,9 +9,9 @@ public class Conexion {
 
     private Connection conn;
     private Statement stmt;
-    private String url = "jdbc:mysql://localhost:3306/tp4";
+    private String url = "jdbc:mysql://localhost:3306/test";
     private String user = "tp4";
-    private String pass = "tp4tp4";
+    private String pass = "";
     private ResultSet listaAlbum, listaArtista, listaTemas;
 
     public Conexion() {
@@ -27,7 +27,7 @@ public class Conexion {
         listaAlbum = null;
         try {
             stmt = (Statement) conn.createStatement();
-            listaAlbum = stmt.executeQuery("SELECT * FROM ALBUM");
+            listaAlbum = stmt.executeQuery("SELECT * FROM album");
         } catch (SQLException ex) {
             System.out.println("Error obtenerAlbum: Excepcion " + ex.getMessage());
         }
@@ -39,7 +39,7 @@ public class Conexion {
         listaArtista = null;
         try {
             stmt = (Statement) conn.createStatement();
-            return stmt.executeQuery("SELECT * FROM ARTISTA");
+            return stmt.executeQuery("SELECT * FROM artista");
         } catch (Exception ex) {
             System.out.println("Error obtenerArtista: Excepcion " + ex.getMessage());
         }
@@ -50,7 +50,7 @@ public class Conexion {
         listaTemas = null;
         try {
             stmt = (Statement) conn.createStatement();
-            listaTemas = stmt.executeQuery("SELECT * FROM TEMA");
+            listaTemas = stmt.executeQuery("SELECT * FROM tema");
         } catch (Exception ex) {
             System.out.println("Error  obtenerTema: Excepcion " + ex.getMessage());
         }
