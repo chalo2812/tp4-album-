@@ -28,7 +28,6 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jb3.setEnabled(false);
         jb4 = new JButton("Aceptar");
         jb4.setVisible(false);
-        jb4.setEnabled(false);
         jpBotones.add(jb1);
         jpBotones.add(jb2);
         jpBotones.add(jb3);
@@ -67,27 +66,24 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jt = new JTable(dtm);
         String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DURACION", "DESCRIPCION"};
         dtm.setColumnIdentifiers(encabezado);
-        try {
-            ResultSet lista = con.obtenerTema();
-            int i = 0;
-            while (lista.next()){
-                dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
-                i++;
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error  cargarTema: Excepcion " + ex.getMessage());
-        }
+        jt.setSize(400,200);
+
         jpTema = new JPanel();
         jpTema.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpTema.add(new JScrollPane(jt));
         jpTema.setVisible(false);
+        jcb.addActionListener (new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(e.getSource());
+            }
+        });
         frame.add(jpBotones);
         frame.add(jpAlbum);
         frame.add(jpArtista);
         frame.add(jpTema);
         frame.add(jb4);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
-        frame.setSize(500,600);
+        frame.setSize(500,630);
         frame.setLocation(50,50);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -101,11 +97,21 @@ public class InterfazGrafica implements ActionListener, WindowListener {
             jpArtista.setVisible(true);
             jtf.setVisible(true);
             jpTema.setVisible(true);
-            jb4.setEnabled(true);
+            jb4.setVisible(true);
         } else if (ae.getSource().equals(jcb)) {
-            jt.setVisible(true);
-        //} else if (ae.getSource().equals()){
+            jt.removeAll();
+            try {
+                ResultSet lista = con.obtenerTema();
+                int i = 0;
+                while (lista.next()){
+                    dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                    i++;
+                }
+            } catch (SQLException ex) {
+                //System.out.println("Error  cargarTema: Excepcion " + ex.getMessage());
+            }
 
+            jt.setVisible(true);
         }
 
     }
