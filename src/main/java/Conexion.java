@@ -9,7 +9,7 @@ public class Conexion {
 
     private Connection conn;
     private Statement stmt;
-    private String url = "jdbc:mysql://localhost:3306/test";
+    private String url = "jdbc:mysql://localhost:3306/tp4";
     private String user = "tp4";
     private String pass = "";
     private ResultSet listaAlbum, listaArtista, listaTemas;
@@ -19,7 +19,8 @@ public class Conexion {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(url, user, pass);
         } catch (Exception ex) {
-            System.out.println("Error Conexion, Excepcion " + ex.getMessage());
+            System.out.println("Error Conexion, Excepcion ");
+            System.out.println(ex + ": "+ ex.getMessage());
         }
     }
 
