@@ -61,6 +61,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpArtista.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpArtista.add(jl2);
         jpArtista.add(jtf);
+        jpArtista.add(jb5);
         jpArtista.setVisible(false);
         dtm = new DefaultTableModel();
         jt = new JTable(dtm);
