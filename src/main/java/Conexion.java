@@ -58,4 +58,15 @@ public class Conexion {
         return listaTemas;
     }
 
+    public ResultSet obtenerTemaByIdAlbum(int id) {
+        listaTemas = null;
+        try {
+            stmt = (Statement) conn.createStatement();
+            listaTemas = stmt.executeQuery("SELECT * FROM tema where ID_ALBUM="+id);
+        } catch (Exception ex) {
+            System.out.println("Error  obtenerTemaByIdAlbum: Excepcion " + ex.getMessage());
+        }
+        return listaTemas;
+    }
+
 }

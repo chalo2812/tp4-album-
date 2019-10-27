@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class InterfazGrafica implements ActionListener, WindowListener {
 
     private JFrame frame;
-    private JButton jb1, jb2, jb3, jb4;
+    private JButton jb1, jb2, jb3, jb4, jb5;
     private JComboBox jcb;
     private JLabel jl1,jl2;
     private JTextField jtf;
@@ -36,6 +36,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jcb = new JComboBox();
         try {
             ResultSet lista = con.obtenerAlbum();
+            jcb.addItem(" --Seleccionar--");
             while (lista.next())
                 jcb.addItem(" " + lista.getInt("NRO_ALBUM") + " - "+ lista.getString("NOMBRE_ALBUM"));
         } catch (SQLException e) {
@@ -53,6 +54,9 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jtf = new JTextField(30);
         jtf.setVisible(true);
         jtf.setEditable(true);
+        jb5 = new JButton("Buscar");
+        jb5.setVisible(false);
+        jb5.addActionListener(this);
         jpArtista = new JPanel();
         jpArtista.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpArtista.add(jl2);
@@ -69,7 +73,20 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpTema.setVisible(false);
         jcb.addActionListener (new ActionListener () {
             public void actionPerformed(ActionEvent e) {
-
+                dtm.removeRow(0);
+                jt.removeAll();
+                Object obj = e.getSource();
+                try {
+                    ResultSet lista = con.obtenerTemaByIdAlbum(obj.toString().hashCode());
+                    int i = 0;
+                    while (lista.next()){
+                        dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                        i++;
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
+                }
+                jt.setVisible(true);
             }
         });
         frame.add(jpBotones);
@@ -93,6 +110,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
             jtf.setVisible(true);
             jpTema.setVisible(true);
             jb4.setVisible(true);
+            jb5.setVisible(true);
         } else if (ae.getSource().equals(jcb)) {
             jt.removeAll();
             try {
@@ -103,47 +121,38 @@ public class InterfazGrafica implements ActionListener, WindowListener {
                     i++;
                 }
             } catch (SQLException ex) {
-                //System.out.println("Error  cargarTema: Excepcion " + ex.getMessage());
+                System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
             }
-
             jt.setVisible(true);
         }
-
     }
 
     @Override
     public void windowOpened(WindowEvent windowEvent) {
-
     }
 
     @Override
     public void windowClosing(WindowEvent windowEvent) {
-
     }
 
     @Override
     public void windowClosed(WindowEvent windowEvent) {
-
     }
 
     @Override
     public void windowIconified(WindowEvent windowEvent) {
-
     }
 
     @Override
     public void windowDeiconified(WindowEvent windowEvent) {
-
     }
 
     @Override
     public void windowActivated(WindowEvent windowEvent) {
-
     }
 
     @Override
     public void windowDeactivated(WindowEvent windowEvent) {
-
     }
 
 }
