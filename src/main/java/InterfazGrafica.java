@@ -22,7 +22,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpBotones = new JPanel();
         jb1 = new JButton("Consulta");
         jb1.addActionListener((ActionListener) this);
-        jb2 = new JButton("Modificación");
+        jb2 = new JButton("Modificacion");
         jb2.setEnabled(false);
         jb3 = new JButton("Baja");
         jb3.setEnabled(false);
@@ -39,17 +39,15 @@ public class InterfazGrafica implements ActionListener, WindowListener {
             while (lista.next())
                 jcb.addItem(" " + lista.getInt("NRO_ALBUM") + " - "+ lista.getString("NOMBRE_ALBUM"));
         } catch (SQLException e) {
-
+            System.out.println("Excepcion al cargar el album" + e.getCause());
         }
         jcb.setEditable(true);
         jcb.setVisible(true);
-
         jpAlbum = new JPanel();
         jpAlbum.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpAlbum.add(jl1);
         jpAlbum.add(jcb);
         jpAlbum.setVisible(false);
-
         jl2 = new JLabel("Artista");
         jl2.setVisible(true);
         jtf = new JTextField(30);
@@ -57,24 +55,21 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jtf.setEditable(true);
         jpArtista = new JPanel();
         jpArtista.setLayout(new FlowLayout(FlowLayout.CENTER));
-
         jpArtista.add(jl2);
         jpArtista.add(jtf);
         jpArtista.setVisible(false);
-
         dtm = new DefaultTableModel();
         jt = new JTable(dtm);
         String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DURACION", "DESCRIPCION"};
         dtm.setColumnIdentifiers(encabezado);
         jt.setSize(400,200);
-
         jpTema = new JPanel();
         jpTema.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpTema.add(new JScrollPane(jt));
         jpTema.setVisible(false);
         jcb.addActionListener (new ActionListener () {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(e.getSource());
+
             }
         });
         frame.add(jpBotones);
