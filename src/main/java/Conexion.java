@@ -62,7 +62,7 @@ public class Conexion {
         listaTemas = null;
         try {
             stmt = (Statement) conn.createStatement();
-            listaTemas = stmt.executeQuery("SELECT * FROM tema where ID_ALBUM="+id);
+            listaTemas = stmt.executeQuery("SELECT * FROM tema where NRO_ALBUM="+id);
         } catch (Exception ex) {
             System.out.println("Error  obtenerTemaByIdAlbum: Excepcion " + ex.getMessage());
         }

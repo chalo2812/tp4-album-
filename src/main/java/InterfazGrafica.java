@@ -36,9 +36,9 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jcb = new JComboBox();
         try {
             ResultSet lista = con.obtenerAlbum();
-            jcb.addItem(" --Seleccionar--");
+            jcb.addItem("Seleccionar");
             while (lista.next())
-                jcb.addItem(" " + lista.getInt("NRO_ALBUM") + " - "+ lista.getString("NOMBRE_ALBUM"));
+                jcb.addItem(lista.getInt("NRO_ALBUM") + " - "+ lista.getString("NOMBRE_ALBUM"));
         } catch (SQLException e) {
             System.out.println("Excepcion al cargar el album" + e.getCause());
         }
@@ -74,15 +74,22 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpTema.setVisible(false);
         jcb.addActionListener (new ActionListener () {
             public void actionPerformed(ActionEvent e) {
-                dtm.removeRow(0);
                 jt.removeAll();
-                Object obj = e.getSource();
+                if (dtm.getDataVector().size()>0){
+                    for (int i=0; i < dtm.getDataVector().size(); i++)
+                        dtm.removeRow(i);
+                }
+                JComboBox obj = (JComboBox) e.getSource();
                 try {
-                    ResultSet lista = con.obtenerTemaByIdAlbum(obj.toString().hashCode());
-                    int i = 0;
-                    while (lista.next()){
-                        dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
-                        i++;
+                    String filtro = obj.getSelectedItem().toString().trim();
+                    if (!filtro.equals("Seleccionar")) {
+                        int selecciono = Integer.parseInt(filtro.substring(0,1));
+                        ResultSet lista = con.obtenerTemaByIdAlbum(selecciono);
+                        int i = 0;
+                        while (lista.next()){
+                            dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                            i++;
+                        }
                     }
                 } catch (SQLException ex) {
                     System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
@@ -129,31 +136,24 @@ public class InterfazGrafica implements ActionListener, WindowListener {
     }
 
     @Override
-    public void windowOpened(WindowEvent windowEvent) {
-    }
+    public void windowOpened(WindowEvent windowEvent) { }
 
     @Override
-    public void windowClosing(WindowEvent windowEvent) {
-    }
+    public void windowClosing(WindowEvent windowEvent) { }
 
     @Override
-    public void windowClosed(WindowEvent windowEvent) {
-    }
+    public void windowClosed(WindowEvent windowEvent) { }
 
     @Override
-    public void windowIconified(WindowEvent windowEvent) {
-    }
+    public void windowIconified(WindowEvent windowEvent) { }
 
     @Override
-    public void windowDeiconified(WindowEvent windowEvent) {
-    }
+    public void windowDeiconified(WindowEvent windowEvent) { }
 
     @Override
-    public void windowActivated(WindowEvent windowEvent) {
-    }
+    public void windowActivated(WindowEvent windowEvent) { }
 
     @Override
-    public void windowDeactivated(WindowEvent windowEvent) {
-    }
+    public void windowDeactivated(WindowEvent windowEvent) { }
 
 }
