@@ -9,7 +9,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
 
     private JFrame frame;
     private JButton jb1, jb2, jb3, jb4, jb5;
-    private JComboBox jcb;
+    private JComboBox jcbAlbum, jcbArtista;
     private JLabel jl1,jl2;
     private JTextField jtf;
     private JTable jt;
@@ -33,46 +33,54 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpBotones.add(jb3);
         jl1 = new JLabel("Album");
         jl1.setVisible(true);
-        jcb = new JComboBox();
+        jcbAlbum = new JComboBox();
         try {
             ResultSet lista = con.obtenerAlbum();
-            jcb.addItem("Seleccionar");
+            jcbAlbum.addItem("Seleccionar");
             while (lista.next())
-                jcb.addItem(lista.getInt("NRO_ALBUM") + " - "+ lista.getString("NOMBRE_ALBUM"));
+                jcbAlbum.addItem(lista.getInt("NRO_ALBUM") + " - "+ lista.getString("NOMBRE_ALBUM"));
         } catch (SQLException e) {
             System.out.println("Excepcion al cargar el album" + e.getCause());
         }
-        jcb.setEditable(true);
-        jcb.setVisible(true);
+        jcbAlbum.setEditable(true);
+        jcbAlbum.setVisible(true);
         jpAlbum = new JPanel();
         jpAlbum.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpAlbum.add(jl1);
-        jpAlbum.add(jcb);
+        jpAlbum.add(jcbAlbum);
         jpAlbum.setVisible(false);
         jl2 = new JLabel("Artista");
         jl2.setVisible(true);
-        jtf = new JTextField(30);
-        jtf.setVisible(true);
-        jtf.setEditable(true);
+        jcbArtista = new JComboBox();
+        try {
+            ResultSet lista = con.obtenerArtista();
+            jcbArtista.addItem("Seleccionar");
+            while (lista.next())
+                jcbArtista.addItem(lista.getInt("NRO_ARTISTA") + " - "+ lista.getString("NOMBREARTISTA"));
+        } catch (SQLException e) {
+            System.out.println("Excepcion al cargar el album" + e.getCause());
+        }
+        jcbArtista.setEditable(true);
+        jcbArtista.setVisible(true);
         jb5 = new JButton("Buscar");
         jb5.setVisible(false);
         jb5.addActionListener(this);
         jpArtista = new JPanel();
         jpArtista.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpArtista.add(jl2);
-        jpArtista.add(jtf);
+        jpArtista.add(jcbArtista);
         jpArtista.add(jb5);
         jpArtista.setVisible(false);
         dtm = new DefaultTableModel();
         jt = new JTable(dtm);
-        String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DURACION", "DESCRIPCION"};
+        String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DESCRIPCION", "DURACION"};
         dtm.setColumnIdentifiers(encabezado);
         jt.setSize(400,200);
         jpTema = new JPanel();
         jpTema.setLayout(new FlowLayout(FlowLayout.CENTER));
         jpTema.add(new JScrollPane(jt));
         jpTema.setVisible(false);
-        jcb.addActionListener (new ActionListener () {
+        jcbAlbum.addActionListener (new ActionListener () {
             public void actionPerformed(ActionEvent e) {
                 jt.removeAll();
                 if (dtm.getDataVector().size()>0){
@@ -81,9 +89,34 @@ public class InterfazGrafica implements ActionListener, WindowListener {
                 }
                 JComboBox obj = (JComboBox) e.getSource();
                 try {
-                    String filtro = obj.getSelectedItem().toString().trim();
+                    String filtro = obj.getSelectedItem().toString();
                     if (!filtro.equals("Seleccionar")) {
-                        int selecciono = Integer.parseInt(filtro.substring(0,1));
+                        int selecciono = Integer.parseInt(filtro.split("-")[0].trim());
+                        ResultSet lista = con.obtenerTemaByIdAlbum(selecciono);
+                        int i = 0;
+                        while (lista.next()){
+                            dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                            i++;
+                        }
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
+                }
+                jt.setVisible(true);
+            }
+        });
+        jcbArtista.addActionListener (new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
+                jt.removeAll();
+                if (dtm.getDataVector().size()>0){
+                    for (int i=0; i < dtm.getDataVector().size(); i++)
+                        dtm.removeRow(i);
+                }
+                JComboBox obj = (JComboBox) e.getSource();
+                try {
+                    String filtro = obj.getSelectedItem().toString();
+                    if (!filtro.equals("Seleccionar")) {
+                        int selecciono = Integer.parseInt(filtro.split("-")[0].trim());
                         ResultSet lista = con.obtenerTemaByIdAlbum(selecciono);
                         int i = 0;
                         while (lista.next()){
@@ -115,14 +148,27 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         if (ae.getSource().equals(jb1)){
             jpAlbum.setVisible(true);
             jpArtista.setVisible(true);
-            jtf.setVisible(true);
             jpTema.setVisible(true);
             jb4.setVisible(true);
             jb5.setVisible(true);
-        } else if (ae.getSource().equals(jcb)) {
+        } else if (ae.getSource().equals(jcbAlbum)) {
             jt.removeAll();
             try {
                 ResultSet lista = con.obtenerTema();
+                int i = 0;
+                while (lista.next()){
+                    dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                    i++;
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
+            }
+            jt.setVisible(true);
+        } else if (ae.getSource().equals(jb5)){
+            jt.removeAll();
+            try {
+                int id = jcbArtista.getSelectedIndex();
+                ResultSet lista = con.obtenerTemaByArtista("1");
                 int i = 0;
                 while (lista.next()){
                     dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
