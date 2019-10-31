@@ -11,7 +11,6 @@ public class InterfazGrafica implements ActionListener, WindowListener {
     private JButton jb1, jb2, jb3, jb4, jb5;
     private JComboBox jcbAlbum, jcbArtista;
     private JLabel jl1,jl2;
-    private JTextField jtf;
     private JTable jt;
     private DefaultTableModel dtm;
     private JPanel jpBotones, jpAlbum,jpArtista, jpTema;
@@ -160,21 +159,25 @@ public class InterfazGrafica implements ActionListener, WindowListener {
                     dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
                     i++;
                 }
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
             }
             jt.setVisible(true);
         } else if (ae.getSource().equals(jb5)){
             jt.removeAll();
             try {
+                if (dtm.getDataVector().size()>0){
+                    for (int i=0; i < dtm.getDataVector().size(); i++)
+                        dtm.removeRow(i);
+                }
                 int id = jcbArtista.getSelectedIndex();
-                ResultSet lista = con.obtenerTemaByArtista("1");
+                ResultSet lista = con.obtenerTemaByArtista(Integer.parseInt(id));
                 int i = 0;
                 while (lista.next()){
                     dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
                     i++;
                 }
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
             }
             jt.setVisible(true);
