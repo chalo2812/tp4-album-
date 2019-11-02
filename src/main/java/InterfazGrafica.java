@@ -171,7 +171,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
                         dtm.removeRow(i);
                 }
                 int id = jcbArtista.getSelectedIndex();
-                ResultSet lista = con.obtenerTemaByArtista(Integer.parseInt(id));
+                ResultSet lista = con.obtenerTemaByArtista(id);
                 int i = 0;
                 while (lista.next()){
                     dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});

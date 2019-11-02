@@ -78,13 +78,11 @@ public class Conexion {
         return listaTemas;
     }
 
-    public ResultSet obtenerTemaByArtista(String artista) {
+    public ResultSet obtenerTemaByArtista(int artista) {
         listaTemas = null;
-        if (artista.equals(""))
-            return listaTemas;
         try {
             stmt = (Statement) conn.createStatement();
-            listaTemas = stmt.executeQuery("SELECT * FROM tema where NRO_ALBUM="+ Integer.parseInt(artista));
+            listaTemas = stmt.executeQuery("SELECT * FROM tema where NRO_ALBUM="+ artista);
         } catch (Exception ex) {
             System.out.println("Error  obtenerTemaByIdAlbum: Excepcion " + ex.getMessage());
         }
