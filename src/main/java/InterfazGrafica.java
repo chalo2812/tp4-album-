@@ -8,15 +8,25 @@ import java.sql.SQLException;
 public class InterfazGrafica implements ActionListener, WindowListener {
 
     private JFrame frame;
-    private JButton jb1, jb2, jb3, jb4, jb5;
+    private JButton jb1, jb2, jb3, jb4, jb5,jb1Salir;
     private JComboBox jcbAlbum, jcbArtista;
-    private JLabel jl1,jl2;
+    private JLabel jl1, jl2;
     private JTable jt;
     private DefaultTableModel dtm;
-    private JPanel jpBotones, jpAlbum,jpArtista, jpTema;
-    private Conexion con = new Conexion();
+    private JPanel jpBotones, jpAlbum, jpArtista, jpTema;
+    private Conexion con;
 
     public InterfazGrafica() {
+        try {
+            con = new Conexion();
+            crearPrincipal();
+        } catch (Exception e1) {
+            crearVentaSalida();
+        }
+    }
+
+    public void crearPrincipal(){
+        
         frame = new JFrame("Tp de TP4");
         jpBotones = new JPanel();
         jb1 = new JButton("Consulta");
@@ -25,8 +35,6 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jb2.setEnabled(false);
         jb3 = new JButton("Baja");
         jb3.setEnabled(false);
-        jb4 = new JButton("Aceptar");
-        jb4.setVisible(false);
         jpBotones.add(jb1);
         jpBotones.add(jb2);
         jpBotones.add(jb3);
@@ -72,7 +80,7 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpArtista.setVisible(false);
         dtm = new DefaultTableModel();
         jt = new JTable(dtm);
-        String[] encabezado = {"NRO_TEMA","NRO_ALBUM", "DESCRIPCION", "DURACION"};
+        String[] encabezado = {"NRO_TEMA", "NRO_ALBUM", "NRO_ARTISTA", "DESCRIPCION", "DURACION"};
         dtm.setColumnIdentifiers(encabezado);
         jt.setSize(400,200);
         jpTema = new JPanel();
@@ -80,11 +88,13 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jpTema.add(new JScrollPane(jt));
         jpTema.setVisible(false);
         jcbAlbum.addActionListener (new ActionListener () {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {    
                 jt.removeAll();
+                jcbArtista.setSelectedIndex(0);
+                int i=0;
                 if (dtm.getDataVector().size()>0){
-                    for (int i=0; i < dtm.getDataVector().size(); i++)
-                        dtm.removeRow(i);
+                    while (i < dtm.getDataVector().size())
+                        dtm.removeRow(0);
                 }
                 JComboBox obj = (JComboBox) e.getSource();
                 try {
@@ -92,9 +102,8 @@ public class InterfazGrafica implements ActionListener, WindowListener {
                     if (!filtro.equals("Seleccionar")) {
                         int selecciono = Integer.parseInt(filtro.split("-")[0].trim());
                         ResultSet lista = con.obtenerTemaByIdAlbum(selecciono);
-                        int i = 0;
-                        while (lista.next()){
-                            dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                        while (lista.next()) {
+                            dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getInt(3),lista.getString(4), lista.getString(5)});
                             i++;
                         }
                     }
@@ -107,19 +116,21 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jcbArtista.addActionListener (new ActionListener () {
             public void actionPerformed(ActionEvent e) {
                 jt.removeAll();
-                if (dtm.getDataVector().size()>0){
-                    for (int i=0; i < dtm.getDataVector().size(); i++)
-                        dtm.removeRow(i);
+                //jcbAlbum.setSelectedIndex(0);
+                int i=0;
+                if (dtm.getDataVector().size()>0) {
+                    while (i < dtm.getDataVector().size()){
+                        dtm.removeRow(0);
+                    }
                 }
-                JComboBox obj = (JComboBox) e.getSource();
                 try {
+                    JComboBox obj = (JComboBox) e.getSource();
                     String filtro = obj.getSelectedItem().toString();
                     if (!filtro.equals("Seleccionar")) {
                         int selecciono = Integer.parseInt(filtro.split("-")[0].trim());
-                        ResultSet lista = con.obtenerTemaByIdAlbum(selecciono);
-                        int i = 0;
+                        ResultSet lista = con.obtenerTemaByArtista(selecciono);
                         while (lista.next()){
-                            dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                            dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4),lista.getString(5)});
                             i++;
                         }
                     }
@@ -133,10 +144,25 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         frame.add(jpAlbum);
         frame.add(jpArtista);
         frame.add(jpTema);
-        frame.add(jb4);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setSize(500,630);
         frame.setLocation(50,50);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    public void crearVentaSalida(){
+        frame = new JFrame("Tp de TP4");
+        JLabel jl = new JLabel();
+        jl.setText("Error con la BD");
+        jb1Salir = new JButton("Salir");
+        jb1Salir.addActionListener((ActionListener) this);
+        frame.add(jl);
+        frame.add(jb1Salir);
+        frame.setLayout(new FlowLayout(FlowLayout.CENTER));
+        frame.setLocation(50,50);
+        frame.setSize(100,200);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -148,39 +174,38 @@ public class InterfazGrafica implements ActionListener, WindowListener {
             jpAlbum.setVisible(true);
             jpArtista.setVisible(true);
             jpTema.setVisible(true);
-            jb4.setVisible(true);
             jb5.setVisible(true);
-        } else if (ae.getSource().equals(jcbAlbum)) {
-            jt.removeAll();
-            try {
-                ResultSet lista = con.obtenerTema();
-                int i = 0;
-                while (lista.next()){
-                    dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
-                    i++;
-                }
-            } catch (Exception ex) {
-                System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
-            }
-            jt.setVisible(true);
         } else if (ae.getSource().equals(jb5)){
             jt.removeAll();
             try {
+                int i=0;
                 if (dtm.getDataVector().size()>0){
-                    for (int i=0; i < dtm.getDataVector().size(); i++)
-                        dtm.removeRow(i);
+                    while (i < dtm.getDataVector().size()){
+                        dtm.removeRow(0);
+                    }
                 }
-                int id = jcbArtista.getSelectedIndex();
-                ResultSet lista = con.obtenerTemaByArtista(id);
-                int i = 0;
-                while (lista.next()){
-                    dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getString(3),lista.getString(4)});
+                int idArtista = jcbArtista.getSelectedIndex();
+                int idAlbum = jcbAlbum.getSelectedIndex();
+                ResultSet lista = null;
+                if (idArtista != 0) {
+                    if (idAlbum != 0)
+                        lista = con.obtenerTemaByArtistaAndAlbum(idArtista, idAlbum);
+                    else
+                        lista = con.obtenerTemaByArtista(idArtista);
+                } else if (idAlbum != 0) {
+                    lista = con.obtenerTemaByIdAlbum(idAlbum);
+                }
+                while (lista != null && lista.next()){
+                    dtm.insertRow(i, new Object[]{lista.getInt(1),lista.getInt(2),lista.getInt(3),lista.getString(4),lista.getString(5)});
                     i++;
                 }
             } catch (Exception ex) {
                 System.out.println("Error cargarTema: Excepcion " + ex.getMessage());
             }
             jt.setVisible(true);
+        } else if (ae.getSource().equals(jb1Salir)){
+            frame.setVisible(false);
+            frame.dispose ();
         }
     }
 
