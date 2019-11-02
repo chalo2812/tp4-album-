@@ -14,12 +14,13 @@ public class Conexion {
     private String pass = "";
     private ResultSet listaAlbum, listaArtista, listaTemas;
 
-    public Conexion() {
+    public Conexion() throws Exception{
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(url, user, pass);
         } catch (Exception ex) {
             System.out.println("Error Conexion, Excepcion "+ ex + ": "+ ex.getMessage() + ", causa :" + ex.getCause());
+            throw new Exception(ex);
         }
     }
 
@@ -82,10 +83,21 @@ public class Conexion {
         listaTemas = null;
         try {
             stmt = (Statement) conn.createStatement();
-            listaTemas = stmt.executeQuery("SELECT * FROM tema where NRO_ALBUM="+ artista);
+            listaTemas = stmt.executeQuery("SELECT * FROM tema where NRO_ARTISTA="+ artista);
         } catch (Exception ex) {
-            System.out.println("Error  obtenerTemaByIdAlbum: Excepcion " + ex.getMessage());
+            System.out.println("Error  obtenerTemaByArtista: Excepcion " + ex.getMessage());
         }
         return listaTemas;
     }
+
+	public ResultSet obtenerTemaByArtistaAndAlbum(int idArtista, int idAlbum) {
+		listaTemas = null;
+        try {
+            stmt = (Statement) conn.createStatement();
+            listaTemas = stmt.executeQuery("SELECT * FROM tema where NRO_ALBUM="+ idAlbum + " AND NRO_ARTISTA = " + idArtista);
+        } catch (Exception ex) {
+            System.out.println("Error  obtenerTemaByArtistaAndAlbum: Excepcion " + ex.getMessage());
+        }
+        return listaTemas;
+	}
 }
