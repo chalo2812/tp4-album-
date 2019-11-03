@@ -90,7 +90,6 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jcbAlbum.addActionListener (new ActionListener () {
             public void actionPerformed(ActionEvent e) {    
                 jt.removeAll();
-                jcbArtista.setSelectedIndex(0);
                 int i=0;
                 if (dtm.getDataVector().size()>0){
                     while (i < dtm.getDataVector().size())
@@ -116,7 +115,6 @@ public class InterfazGrafica implements ActionListener, WindowListener {
         jcbArtista.addActionListener (new ActionListener () {
             public void actionPerformed(ActionEvent e) {
                 jt.removeAll();
-                //jcbAlbum.setSelectedIndex(0);
                 int i=0;
                 if (dtm.getDataVector().size()>0) {
                     while (i < dtm.getDataVector().size()){
